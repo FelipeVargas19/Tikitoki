@@ -1,5 +1,7 @@
  import 'package:flutter/material.dart';
 import 'package:tikitoki/domain/entities/video_post.dart';
+import 'package:tikitoki/presentation/widgets/shared/video_buttons.dart';
+import 'package:tikitoki/presentation/widgets/video/fullscreen_player.dart';
 
 class VideoScrollableView extends StatelessWidget {
 
@@ -11,12 +13,29 @@ class VideoScrollableView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
+    return PageView.builder(
       scrollDirection: Axis.vertical,
-      children: [
-        Container(color: Colors.red),
-        Container(color: Colors.blue),
-      ],
+      physics: const BouncingScrollPhysics(),
+      itemCount: videos.length,
+      itemBuilder: (context, index) {
+        final VideoPost videoPost= videos[index];
+
+        return Stack(
+          children: [
+
+            SizedBox.expand(
+              child: FullscreenPlayer(
+                caption: videoPost.caption,
+                videoUrl: videoPost.videoUrl,),
+            ),
+
+            Positioned(
+              bottom: 40,
+              right: 20,
+              child: VideoButtons(video: videoPost)),
+          ],
+        );
+      }
     );
   }
 }
